@@ -4,6 +4,7 @@
 # @Author : chaocai
 import datetime
 import json
+import random
 
 from service import util, config
 
@@ -56,6 +57,7 @@ async def lightnovel_task(login_info, session):
     sign_url = 'https://api.lightnovel.us/api/task/complete'
     sign_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                  '"d":{"id":%s,"security_key":"' + login_info.token + '"},"gz":1}'
+    # TODO 获取个人任务，已完成的不再做
     # 阅读
     print('轻国账号%s开始进行阅读任务...' % login_info.username)
     read_url = 'https://api.lightnovel.us/api/history/add-history'
@@ -78,11 +80,13 @@ async def lightnovel_task(login_info, session):
                                            '连接已断开，重试中... ', True, session)
     collection_res = util.unzip(collection_text)['code']
     lightnovel_print_res(collection_res, '收藏任务完成！', '收藏任务失败！')
-    # 点赞
+    # 点赞，防止已点赞过点两次
     print('轻国账号%s开始进行点赞任务...' % login_info.username)
     like_url = 'https://api.lightnovel.us/api/article/like'
     like_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                  '"d":{"aid":1123305,"security_key":"' + login_info.token + '"},"gz":1}'
+    await util.http_post(like_url, util.build_headers(login_info), json.loads(like_param), None,
+                         '连接已断开，重试中... ', True, session)
     await util.http_post(like_url, util.build_headers(login_info), json.loads(like_param), None,
                          '连接已断开，重试中... ', True, session)
     like_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '3'), None,
@@ -96,10 +100,13 @@ async def lightnovel_task(login_info, session):
     share_res = util.unzip(share_text)['code']
     lightnovel_print_res(share_res, '分享任务完成！', '分享任务失败！')
     # 投币
+    # 随机 aid 1100000 ~ 1130000
+    random_aid = random.randint(1100000, 1130000)
     print('轻国账号%s开始进行投币任务...' % login_info.username)
     pay_url = 'https://api.lightnovel.us/api/coin/use'
     pay_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
-                '"d":{"goods_id":2,"params":1123305,"price":1,"number":10,"total_price":10,"security_key":"' + login_info.token + '"},"gz":1}'
+                '"d":{"goods_id":2,"params":' + str(random_aid) + ',"price":1,"number":10,"total_price":10,' \
+                '"security_key":"' + login_info.token + '"},"gz":1}'
     await util.http_post(pay_url, util.build_headers(login_info), json.loads(pay_param), None,
                          '连接已断开，重试中... ', True, session)
     pay_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '6'), None,
