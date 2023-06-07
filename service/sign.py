@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 # @Time : 2023/6/5
 # @Author : chaocai
-import datetime
 import json
 import random
 
-from service import util, config
+from service import util, config, log
 
 
 # 签到入口
@@ -20,27 +19,27 @@ async def sign(login_info, session):
 # 真白萌签到
 async def masiro_sign(login_info, session):
     # 登录签到
-    print('%s真白萌账号%s开始签到...' % (datetime.datetime.now(), login_info.username))
+    log.info('%s真白萌账号%s开始签到...' % login_info.username)
     sign_url = 'https://masiro.me/admin/dailySignIn'
     await util.http_get(sign_url, util.build_headers(login_info), None, '连接已断开，重试中... ', session)
-    print('每日登录签到成功！')
+    log.info('每日登录签到成功！')
     # 祈愿池
     if config.read('is_wish'):
-        print('真白萌账号%s开始祈愿...' % login_info.username)
+        log.info('真白萌账号%s开始祈愿...' % login_info.username)
         wish_url = 'https://masiro.me/admin/gachiyaWishingPond'
         wish_param = {'wp_id': 1, 'cost': 10}
         text = await util.http_post(wish_url, util.build_headers(login_info), wish_param, None,
                                     '连接已断开，重试中... ', False, session)
         if text:
-            print(json.loads(text)['msg'])
+            log.info(json.loads(text)['msg'])
         else:
-            print('祈愿失败！')
+            log.info('祈愿失败！')
 
 
 # 轻国签到
 async def lightnovel_sign(login_info, session):
     # 登录签到
-    print('%s轻国账号%s开始签到...' % (datetime.datetime.now(), login_info.username))
+    log.info('轻国账号%s开始签到...' % login_info.username)
     sign_url = 'https://api.lightnovel.us/api/task/complete'
     param_str = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                 '"d":{"id":8,"security_key":"' + login_info.token + '"},"gz":1}'
@@ -65,8 +64,8 @@ async def lightnovel_task(login_info, session):
     sign_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                  '"d":{"id":%s,"security_key":"' + login_info.token + '"},"gz":1}'
     # 阅读
-    if task_list['item'][0]['status'] == 0:
-        print('轻国账号%s开始进行阅读任务...' % login_info.username)
+    if task_list['data']['items'][0]['status'] == 0:
+        log.info('轻国账号%s开始进行阅读任务...' % login_info.username)
         read_url = 'https://api.lightnovel.us/api/history/add-history'
         read_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                      '"d":{"fid":2408,"class":2,"security_key":"' + login_info.token + '"},"gz":1}'
@@ -77,8 +76,8 @@ async def lightnovel_task(login_info, session):
         read_res = util.unzip(read_text)['code']
         lightnovel_print_res(read_res, '阅读任务完成！', '阅读任务失败！')
     # 收藏
-    if task_list['item'][1]['status'] == 0:
-        print('轻国账号%s开始进行收藏任务...' % login_info.username)
+    if task_list['data']['items'][1]['status'] == 0:
+        log.info('轻国账号%s开始进行收藏任务...' % login_info.username)
         collection_url = 'https://api.lightnovel.us/api/history/add-collection'
         collection_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                            '"d":{"fid":1123305,"class":1,"security_key":"' + login_info.token + '"},"gz":1}'
@@ -91,8 +90,8 @@ async def lightnovel_task(login_info, session):
     # 点赞，防止已点赞过点两次
     # 随机 aid 1100000 ~ 1130000
     random_aid = random.randint(1100000, 1130000)
-    if task_list['item'][2]['status'] == 0:
-        print('轻国账号%s开始进行点赞任务...' % login_info.username)
+    if task_list['data']['items'][2]['status'] == 0:
+        log.info('轻国账号%s开始进行点赞任务...' % login_info.username)
         like_url = 'https://api.lightnovel.us/api/article/like'
         like_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                      '"d":{"aid":' + str(random_aid) + ',"security_key":"' + login_info.token + '"},"gz":1}'
@@ -105,15 +104,15 @@ async def lightnovel_task(login_info, session):
         like_res = util.unzip(like_text)['code']
         lightnovel_print_res(like_res, '点赞任务完成！', '点赞任务失败！')
     # 分享
-    if task_list['item'][3]['status'] == 0:
-        print('轻国账号%s开始进行分享任务...' % login_info.username)
+    if task_list['data']['items'][3]['status'] == 0:
+        log.info('轻国账号%s开始进行分享任务...' % login_info.username)
         share_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '5'), None,
                                           '连接已断开，重试中... ', True, session)
         share_res = util.unzip(share_text)['code']
         lightnovel_print_res(share_res, '分享任务完成！', '分享任务失败！')
     # 投币
-    if task_list['item'][4]['status'] == 0:
-        print('轻国账号%s开始进行投币任务...' % login_info.username)
+    if task_list['data']['items'][4]['status'] == 0:
+        log.info('轻国账号%s开始进行投币任务...' % login_info.username)
         pay_url = 'https://api.lightnovel.us/api/coin/use'
         pay_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                     '"d":{"goods_id":2,"params":' + str(random_aid) + ',"price":1,"number":10,"total_price":10,' \
@@ -125,19 +124,19 @@ async def lightnovel_task(login_info, session):
         pay_res = util.unzip(pay_text)['code']
         lightnovel_print_res(pay_res, '投币任务完成！', '投币任务失败！')
     # 全部完成
-    if task_list['status'] == 0:
-        print('轻国账号%s开始进行最终任务...' % login_info.username)
+    if task_list['data']['status'] == 0:
+        log.info('轻国账号%s开始进行最终任务...' % login_info.username)
         final_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '7'), None,
                                           '连接已断开，重试中... ', True, session)
         final_res = util.unzip(final_text)['code']
         lightnovel_print_res(final_res, '全部任务完成！', '最终任务失败！')
     else:
-        print('已完成全部任务！')
+        log.info('已完成全部任务！')
 
 
 # 轻国打印签到结果
 def lightnovel_print_res(res, success_info, fail_info):
     if res == 0:
-        print(success_info)
+        log.info(success_info)
     else:
-        print(fail_info)
+        log.info(fail_info)

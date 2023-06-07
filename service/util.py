@@ -8,7 +8,7 @@ import zlib
 
 from tenacity import retry, stop_after_attempt
 
-from service import config
+from service import config, log
 
 
 # 通用get请求
@@ -22,10 +22,10 @@ async def http_get(url, headers, success_info, fail_info, session):
             raise Exception(fail_info) if fail_info else Exception()
         text = await response.text()
         if success_info:
-            print(success_info)
+            log.info(success_info)
     except Exception as e:
         if fail_info:
-            print(fail_info)
+            log.info(fail_info)
         raise e
     return text
 
@@ -45,10 +45,10 @@ async def http_post(url, headers, param, success_info, fail_info, is_json, sessi
             raise Exception(fail_info) if fail_info else Exception()
         text = await response.text()
         if success_info:
-            print(success_info)
+            log.info(success_info)
     except Exception as e:
         if fail_info:
-            print(fail_info)
+            log.info(fail_info)
         raise e
     return text
 

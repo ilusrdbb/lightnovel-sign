@@ -5,7 +5,8 @@
 import json
 
 from lxml import html
-from service import config, util
+
+from service import config, util, log
 
 
 class Login:
@@ -48,7 +49,7 @@ async def login(login_info, session):
     if login_info.site == 'lightnovel':
         # 轻国设置token
         login_info.token = json.loads(res)['data']['security_key']
-    print('账号%s登录成功！' % login_info.username)
+    log.info('账号%s登录成功！' % login_info.username)
 
 
 # 构造请求头
