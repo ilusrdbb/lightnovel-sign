@@ -149,7 +149,7 @@ async def lightnovel_user_info(login_info, session):
 
 # 轻国投币任务
 async def lightnove_pay(login_info, sign_url, sign_param, session, retry_time):
-    random_aid = random.randint(1100000, 1130000)
+    random_aid = random.randint(1000000, 1125000)
     log.info('轻国账号%s开始进行投币任务...' % login_info.username)
     pay_url = 'https://api.lightnovel.us/api/coin/use'
     pay_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
@@ -168,7 +168,7 @@ async def lightnove_pay(login_info, sign_url, sign_param, session, retry_time):
 
 # 轻国点赞任务
 async def lightnove_like(login_info, sign_url, sign_param, session, retry_time):
-    random_aid = random.randint(1100000, 1130000)
+    random_aid = random.randint(1000000, 1125000)
     log.info('轻国账号%s开始进行点赞任务...' % login_info.username)
     like_url = 'https://api.lightnovel.us/api/article/like'
     like_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
