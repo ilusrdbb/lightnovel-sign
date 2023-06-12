@@ -91,18 +91,7 @@ async def lightnovel_task(login_info, session):
     # 随机 aid 1100000 ~ 1130000
     random_aid = random.randint(1100000, 1130000)
     if task_list['data']['items'][2]['status'] == 0:
-        log.info('轻国账号%s开始进行点赞任务...' % login_info.username)
-        like_url = 'https://api.lightnovel.us/api/article/like'
-        like_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
-                     '"d":{"aid":' + str(random_aid) + ',"security_key":"' + login_info.token + '"},"gz":1}'
-        await util.http_post(like_url, util.build_headers(login_info), json.loads(like_param), None,
-                             '连接已断开，重试中... ', True, session)
-        await util.http_post(like_url, util.build_headers(login_info), json.loads(like_param), None,
-                             '连接已断开，重试中... ', True, session)
-        like_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '3'), None,
-                                         '连接已断开，重试中... ', True, session)
-        like_res = util.unzip(like_text)['code']
-        lightnovel_print_res(like_res, '点赞任务完成！', '点赞任务失败！')
+        await lightnove_like(login_info, sign_url, sign_param, session, 0)
     # 分享
     if task_list['data']['items'][3]['status'] == 0:
         log.info('轻国账号%s开始进行分享任务...' % login_info.username)
@@ -112,17 +101,7 @@ async def lightnovel_task(login_info, session):
         lightnovel_print_res(share_res, '分享任务完成！', '分享任务失败！')
     # 投币
     if task_list['data']['items'][4]['status'] == 0:
-        log.info('轻国账号%s开始进行投币任务...' % login_info.username)
-        pay_url = 'https://api.lightnovel.us/api/coin/use'
-        pay_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
-                    '"d":{"goods_id":2,"params":' + str(random_aid) + ',"price":1,"number":10,"total_price":10,' \
-                    '"security_key":"' + login_info.token + '"},"gz":1}'
-        await util.http_post(pay_url, util.build_headers(login_info), json.loads(pay_param), None,
-                             '连接已断开，重试中... ', True, session)
-        pay_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '6'), None,
-                                        '连接已断开，重试中... ', True, session)
-        pay_res = util.unzip(pay_text)['code']
-        lightnovel_print_res(pay_res, '投币任务完成！', '投币任务失败！')
+        await lightnove_pay(login_info, sign_url, sign_param, session, 0)
     # 全部完成
     if task_list['data']['status'] == 0:
         log.info('轻国账号%s开始进行最终任务...' % login_info.username)
@@ -134,9 +113,50 @@ async def lightnovel_task(login_info, session):
         log.info('已完成全部任务！')
 
 
+# 轻国投币任务
+async def lightnove_pay(login_info, sign_url, sign_param, session, retry_time):
+    random_aid = random.randint(1100000, 1130000)
+    log.info('轻国账号%s开始进行投币任务...' % login_info.username)
+    pay_url = 'https://api.lightnovel.us/api/coin/use'
+    pay_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
+                '"d":{"goods_id":2,"params":' + str(random_aid) + ',"price":1,"number":10,"total_price":10,' \
+                                                                  '"security_key":"' + login_info.token + '"},"gz":1}'
+    await util.http_post(pay_url, util.build_headers(login_info), json.loads(pay_param), None,
+                         '连接已断开，重试中... ', True, session)
+    pay_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '6'), None,
+                                    '连接已断开，重试中... ', True, session)
+    pay_res = util.unzip(pay_text)['code']
+    # 重试三次
+    if not lightnovel_print_res(pay_res, '投币任务完成！', '投币任务失败！') and retry_time < 4:
+        retry_time += 1
+        lightnove_pay(login_info, sign_url, sign_param, session, retry_time)
+
+
+# 轻国点赞任务
+async def lightnove_like(login_info, sign_url, sign_param, session, retry_time):
+    random_aid = random.randint(1100000, 1130000)
+    log.info('轻国账号%s开始进行点赞任务...' % login_info.username)
+    like_url = 'https://api.lightnovel.us/api/article/like'
+    like_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
+                 '"d":{"aid":' + str(random_aid) + ',"security_key":"' + login_info.token + '"},"gz":1}'
+    await util.http_post(like_url, util.build_headers(login_info), json.loads(like_param), None,
+                         '连接已断开，重试中... ', True, session)
+    await util.http_post(like_url, util.build_headers(login_info), json.loads(like_param), None,
+                         '连接已断开，重试中... ', True, session)
+    like_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '3'), None,
+                                     '连接已断开，重试中... ', True, session)
+    like_res = util.unzip(like_text)['code']
+    # 重试三次
+    if not lightnovel_print_res(like_res, '点赞任务完成！', '点赞任务失败！') and retry_time < 4:
+        retry_time += 1
+        lightnove_like(login_info, sign_url, sign_param, session, retry_time)
+
+
 # 轻国打印签到结果
 def lightnovel_print_res(res, success_info, fail_info):
     if res == 0:
         log.info(success_info)
+        return True
     else:
         log.info(fail_info)
+        return False
