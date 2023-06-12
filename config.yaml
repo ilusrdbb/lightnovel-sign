@@ -9,7 +9,7 @@ login_info:
   lightnovel:
     - username: ''
       password: ''
-# 代理地址 不支持https代理
+# 代理地址 不支持https代理 例http://127.0.0.1:1081
 proxy_url: ''
 # 请求超时时间 单位秒
 time_out: 10
@@ -19,6 +19,8 @@ is_cron: true
 sign_time: '10:00:00'
 # 真白萌是否开启祈愿池祈愿，关于自动开启金币券的功能暂未实现
 is_wish: true
+# 真白萌是否自动使用金币券
+masiro_use_coin: true
 
 # 下面的设置请谨慎更改 除非你对源码有足够的了解
 # 通用请求头
@@ -31,7 +33,3 @@ headers:
 url_config:
   masiro: 'https://masiro.me/admin/auth/login'
   lightnovel: 'https://www.lightnovel.us/proxy/api/user/login'
-
-
-
-
