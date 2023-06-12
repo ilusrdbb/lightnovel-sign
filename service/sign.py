@@ -19,7 +19,7 @@ async def sign(login_info, session):
 # 真白萌签到
 async def masiro_sign(login_info, session):
     # 登录签到
-    log.info('%s真白萌账号%s开始签到...' % login_info.username)
+    log.info('真白萌账号%s开始签到...' % login_info.username)
     sign_url = 'https://masiro.me/admin/dailySignIn'
     await util.http_get(sign_url, util.build_headers(login_info), None, '连接已断开，重试中... ', session)
     log.info('每日登录签到成功！')
