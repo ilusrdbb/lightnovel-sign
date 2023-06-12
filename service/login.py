@@ -20,6 +20,8 @@ class Login:
     password: None
     # token
     token: None
+    # 轻国uid
+    uid: None
 
     # 初始化
     def __init__(self, site, username, password):
@@ -49,6 +51,7 @@ async def login(login_info, session):
     if login_info.site == 'lightnovel':
         # 轻国设置token
         login_info.token = json.loads(res)['data']['security_key']
+        login_info.uid = json.loads(res)['data']['uid']
     log.info('账号%s登录成功！' % login_info.username)
 
 

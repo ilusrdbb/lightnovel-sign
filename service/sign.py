@@ -38,6 +38,8 @@ async def masiro_sign(login_info, session):
 
 # 轻国签到
 async def lightnovel_sign(login_info, session):
+    # 用户信息
+    await lightnovel_user_info(login_info, session)
     # 登录签到
     log.info('轻国账号%s开始签到...' % login_info.username)
     sign_url = 'https://api.lightnovel.us/api/task/complete'
@@ -83,7 +85,8 @@ async def lightnovel_task(login_info, session):
                            '"d":{"fid":1123305,"class":1,"security_key":"' + login_info.token + '"},"gz":1}'
         await util.http_post(collection_url, util.build_headers(login_info), json.loads(collection_param), None,
                              '连接已断开，重试中... ', True, session)
-        collection_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '2'), None,
+        collection_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '2'),
+                                               None,
                                                '连接已断开，重试中... ', True, session)
         collection_res = util.unzip(collection_text)['code']
         lightnovel_print_res(collection_res, '收藏任务完成！', '收藏任务失败！')
@@ -111,6 +114,19 @@ async def lightnovel_task(login_info, session):
         lightnovel_print_res(final_res, '全部任务完成！', '最终任务失败！')
     else:
         log.info('已完成全部任务！')
+    await lightnovel_user_info(login_info, session)
+
+
+# 轻国用户信息
+async def lightnovel_user_info(login_info, session):
+    url = 'https://api.lightnovel.us/api/user/info'
+    param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
+            '"d":{"uid": ' + str(login_info.uid) + ',"security_key":"' + login_info.token + '"},"gz":1}'
+    text = await util.http_post(url, util.build_headers(login_info), json.loads(param), None,
+                                '连接已断开，重试中... ', True, session)
+    coin = util.unzip(text)['data']['balance']['coin']
+    exp = util.unzip(text)['data']['level']['exp']
+    log.info('轻币：%s 经验：%s' % (str(coin), str(exp)))
 
 
 # 轻国投币任务
