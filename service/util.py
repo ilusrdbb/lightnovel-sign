@@ -12,7 +12,7 @@ from service import config, log
 
 
 # 通用get请求
-@retry(stop=stop_after_attempt(3))
+@retry(stop=stop_after_attempt(5))
 async def http_get(url, headers, success_info, fail_info, session):
     proxy = config.read('proxy_url') if config.read('proxy_url') else None
     try:
@@ -31,7 +31,7 @@ async def http_get(url, headers, success_info, fail_info, session):
 
 
 # 通用post请求
-@retry(stop=stop_after_attempt(3))
+@retry(stop=stop_after_attempt(5))
 async def http_post(url, headers, param, success_info, fail_info, is_json, session):
     proxy = config.read('proxy_url') if config.read('proxy_url') else None
     try:
