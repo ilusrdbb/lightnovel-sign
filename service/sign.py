@@ -34,24 +34,6 @@ async def masiro_sign(login_info, session):
             log.info(json.loads(text)['msg'])
         else:
             log.info('祈愿失败！')
-    # 自动使用金币券
-    if config.read('masiro_use_coin'):
-        log.info('真白萌账号%s开始使用金币券...' % login_info.username)
-        coin_id_list = [782471, 740611, 739060, 737488]
-        coin_url = 'https://masiro.me/admin/useItem'
-        success_count = 0
-        for coin_id in coin_id_list:
-            param = {'id': coin_id, 'type': 1}
-            text = await util.http_post(coin_url, util.build_headers(login_info), param, None,
-                                        '连接已断开，重试中... ', False, session)
-            if text and json.loads(text)['code'] == 1:
-                success_count += 1
-                log.info(json.loads(text)['msg'])
-        if success_count < 1:
-            log.info('道具箱中没有金币券')
-
-
-
 
 
 # 轻国签到
