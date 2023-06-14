@@ -20,9 +20,9 @@ loop = asyncio.get_event_loop()
 
 @sc.scheduled_job('cron', hour=time_list[0], minute=time_list[1], second=time_list[2])
 def cron_start():
-    # 日志
     log.init_log()
-    service.start(loop)
+    # service.start(loop)
+    log.remove_log()
 
 
 if __name__ == '__main__':

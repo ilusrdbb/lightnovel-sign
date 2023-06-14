@@ -27,6 +27,11 @@ def init_log():
     logger.addHandler(console)
 
 
+def remove_log():
+    logger.removeHandler(logger.handlers[0])
+    logger.removeHandler(logger.handlers[0])
+
+
 def info(message):
     logger.setLevel(logging.INFO)
     logging.info(message)
