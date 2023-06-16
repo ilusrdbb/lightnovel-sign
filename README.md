@@ -10,7 +10,7 @@
 
 使用方法：
 
-在release中找到对应系统的压缩包，解压后根据自身需求修改config.yaml中的配置项，运行其中的main可执行文件
+在release中下载解压压缩包，根据自身需求修改config.yaml中的配置项，运行main.exe
 
 可在log目录下查看运行日志
 
