@@ -6,6 +6,7 @@ import asyncio
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+import service
 from service import config, log
 
 # 定时执行
@@ -20,7 +21,7 @@ loop = asyncio.get_event_loop()
 @sc.scheduled_job('cron', hour=time_list[0], minute=time_list[1], second=time_list[2])
 def cron_start():
     log.init_log()
-    # service.start(loop)
+    service.start(loop)
     log.remove_log()
 
 
