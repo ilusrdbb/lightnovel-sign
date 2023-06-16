@@ -6,7 +6,6 @@ import asyncio
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-import service
 from service import config, log
 
 # 定时执行
