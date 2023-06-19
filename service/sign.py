@@ -90,7 +90,7 @@ async def lightnovel_task(login_info, session):
                                                '连接已断开，重试中... ', True, session)
         collection_res = util.unzip(collection_text)['code']
         lightnovel_print_res(collection_res, '收藏任务完成！', '收藏任务失败！')
-    # 点赞，防止已点赞过点两次
+    # 点赞
     if task_list['data']['items'][2]['status'] == 0:
         await lightnove_like(login_info, sign_url, sign_param, session, 0)
     # 分享
