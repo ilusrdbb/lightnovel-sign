@@ -91,8 +91,6 @@ async def lightnovel_task(login_info, session):
         collection_res = util.unzip(collection_text)['code']
         lightnovel_print_res(collection_res, '收藏任务完成！', '收藏任务失败！')
     # 点赞，防止已点赞过点两次
-    # 随机 aid 1100000 ~ 1130000
-    random_aid = random.randint(1100000, 1130000)
     if task_list['data']['items'][2]['status'] == 0:
         await lightnove_like(login_info, sign_url, sign_param, session, 0)
     # 分享
@@ -145,7 +143,7 @@ async def lightnove_pay(login_info, sign_url, sign_param, session, retry_time):
     # 重试三次
     if not lightnovel_print_res(pay_res, '投币任务完成！', '投币任务失败！') and retry_time < 4:
         retry_time += 1
-        lightnove_pay(login_info, sign_url, sign_param, session, retry_time)
+        await lightnove_pay(login_info, sign_url, sign_param, session, retry_time)
 
 
 # 轻国点赞任务
@@ -165,7 +163,7 @@ async def lightnove_like(login_info, sign_url, sign_param, session, retry_time):
     # 重试三次
     if not lightnovel_print_res(like_res, '点赞任务完成！', '点赞任务失败！') and retry_time < 4:
         retry_time += 1
-        lightnove_like(login_info, sign_url, sign_param, session, retry_time)
+        await lightnove_like(login_info, sign_url, sign_param, session, retry_time)
 
 
 # 轻国打印签到结果
