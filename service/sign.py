@@ -77,17 +77,16 @@ async def lightnovel_task(login_info, session):
     sign_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                  '"d":{"id":%s,"security_key":"' + login_info.token + '"},"gz":1}'
     # 阅读
-    if task_list['data']['items'][0]['status'] == 0:
-        log.info('轻国账号%s开始进行阅读任务...' % login_info.username)
-        read_url = 'https://api.lightnovel.us/api/history/add-history'
-        read_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
-                     '"d":{"fid":2408,"class":2,"security_key":"' + login_info.token + '"},"gz":1}'
-        await util.http_post(read_url, util.build_headers(login_info), json.loads(read_param), None,
-                             '连接已断开，重试中... ', True, session)
-        read_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '1'), None,
-                                         '连接已断开，重试中... ', True, session)
-        read_res = util.unzip(read_text)['code']
-        lightnovel_print_res(read_res, '阅读任务完成！', '阅读任务失败！')
+    log.info('轻国账号%s开始进行阅读任务...' % login_info.username)
+    read_url = 'https://api.lightnovel.us/api/history/add-history'
+    read_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
+                 '"d":{"fid":2408,"class":2,"security_key":"' + login_info.token + '"},"gz":1}'
+    await util.http_post(read_url, util.build_headers(login_info), json.loads(read_param), None,
+                         '连接已断开，重试中... ', True, session)
+    read_text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(sign_param % '1'), None,
+                                     '连接已断开，重试中... ', True, session)
+    read_res = util.unzip(read_text)['code']
+    lightnovel_print_res(read_res, '阅读任务完成！', '阅读任务失败！')
     # 收藏
     if task_list['data']['items'][1]['status'] == 0:
         log.info('轻国账号%s开始进行收藏任务...' % login_info.username)
