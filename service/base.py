@@ -11,6 +11,7 @@ async def start_sign(site):
     if site == 'all':
         await _start_sign('masiro')
         await _start_sign('lightnovel')
+        await _start_sign('yuri')
     else:
         await _start_sign(site)
 

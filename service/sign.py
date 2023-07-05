@@ -14,6 +14,17 @@ async def sign(login_info, session):
         await lightnovel_sign(login_info, session)
     if login_info.site == 'masiro':
         await masiro_sign(login_info, session)
+    if login_info.site == 'yuri':
+        await yuri_sign(login_info, session)
+
+
+# 百合会签到
+async def yuri_sign(login_info, session):
+    log.info('百合会账号%s开始签到...' % login_info.username)
+    form_hash = login_info.hash['formhash']
+    sign_url = 'https://bbs.yamibo.com/plugin.php?id=zqlj_sign&sign=' + form_hash
+    await util.http_get(sign_url, util.build_headers(login_info), None, '连接已断开，重试中... ', session)
+    log.info('签到成功！')
 
 
 # 真白萌签到

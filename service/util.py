@@ -14,13 +14,15 @@ from service import config, log
 # 通用get请求
 @retry(stop=stop_after_attempt(5))
 async def http_get(url, headers, success_info, fail_info, session):
+    text = None
     proxy = config.read('proxy_url') if config.read('proxy_url') else None
     try:
         response = await session.get(url=url, headers=headers, proxy=proxy,
                                      timeout=config.read('time_out'))
         if not response.status == 200:
             raise Exception(fail_info) if fail_info else Exception()
-        text = await response.text()
+        if 'zqlj_sign' not in url:
+            text = await response.text()
         if success_info:
             log.info(success_info)
     except Exception as e:
