@@ -1,5 +1,5 @@
 # 下面所有的配置如果在程序运行中作了修改，需要重启服务才可生效
-# 签到站点 masiro 真白萌，lightnovel 某站，yuri 某百合站，all 全部
+# 签到站点 masiro 真白萌，lightnovel 某站，all 全部
 site: 'masiro'
 # 登录账号密码，支持多账号，按顺序登录签到
 login_info:
@@ -7,9 +7,6 @@ login_info:
     - username: ''
       password: ''
   lightnovel:
-    - username: ''
-      password: ''
-  yuri:
     - username: ''
       password: ''
 # 代理地址 不支持https代理 例http://127.0.0.1:1081
