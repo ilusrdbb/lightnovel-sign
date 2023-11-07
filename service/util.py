@@ -12,8 +12,8 @@ from service import config, log
 
 
 # 通用get请求
-@retry(stop=stop_after_attempt(5))
-async def http_get(url, headers, success_info, fail_info, session):
+@retry(stop=stop_after_attempt(3))
+async def http_get(url, headers, fail_info, session):
     text = None
     proxy = config.read('proxy_url') if config.read('proxy_url') else None
     try:
@@ -21,10 +21,6 @@ async def http_get(url, headers, success_info, fail_info, session):
                                      timeout=config.read('time_out'))
         if not response.status == 200:
             raise Exception(fail_info) if fail_info else Exception()
-        if 'zqlj_sign' not in url:
-            text = await response.text()
-        if success_info:
-            log.info(success_info)
     except Exception as e:
         if fail_info:
             log.info(fail_info)
@@ -33,7 +29,7 @@ async def http_get(url, headers, success_info, fail_info, session):
 
 
 # 通用post请求
-@retry(stop=stop_after_attempt(5))
+@retry(stop=stop_after_attempt(3))
 async def http_post(url, headers, param, success_info, fail_info, is_json, session):
     proxy = config.read('proxy_url') if config.read('proxy_url') else None
     try:

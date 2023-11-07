@@ -1,11 +1,7 @@
-# 下面所有的配置如果在程序运行中作了修改，需要重启服务才可生效
-# 签到站点 masiro 真白萌，lightnovel 某站，all 全部
-site: 'masiro'
+# 签到站点 目前暂时只支持轻国app任务
+site: 'lightnovel'
 # 登录账号密码，支持多账号，按顺序登录签到
 login_info:
-  masiro:
-    - username: ''
-      password: ''
   lightnovel:
     - username: ''
       password: ''
@@ -13,12 +9,6 @@ login_info:
 proxy_url: ''
 # 请求超时时间 单位秒
 time_out: 10
-# 是否定时执行
-is_cron: false
-# 定时执行开启时，每天执行签到的时间 格式hh:mm:dd 例20:50:05
-sign_time: '10:00:00'
-# 真白萌是否开启祈愿池祈愿
-is_wish: true
 
 # 下面的设置请谨慎更改 除非你对源码有足够的了解
 # 通用请求头
@@ -29,6 +19,4 @@ headers:
   User-Agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
 # 登录地址配置
 url_config:
-  masiro: 'https://masiro.me/admin/auth/login'
   lightnovel: 'https://www.lightnovel.us/proxy/api/user/login'
-  yuri: 'https://bbs.yamibo.com/%s&frommessage&inajax=1'

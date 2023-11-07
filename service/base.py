@@ -9,7 +9,6 @@ from service import login, config, sign
 
 async def start_sign(site):
     if site == 'all':
-        await _start_sign('masiro')
         await _start_sign('lightnovel')
     else:
         await _start_sign(site)
