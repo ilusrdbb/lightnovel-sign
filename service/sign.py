@@ -20,7 +20,7 @@ async def lightnovel_sign(login_info, session):
     await lightnovel_user_info(login_info, session)
     # 登录签到
     log.info('轻国账号%s开始签到...' % login_info.username)
-    sign_url = 'https://api.lightnovel.us/api/task/complete'
+    sign_url = 'https://api.lightnovel.fun/api/task/complete'
     param_str = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                 '"d":{"id":8,"security_key":"' + login_info.token + '"},"gz":1}'
     text = await util.http_post(sign_url, util.build_headers(login_info), json.loads(param_str), None,
@@ -34,18 +34,18 @@ async def lightnovel_sign(login_info, session):
 # 轻国任务
 async def lightnovel_task(login_info, session):
     # 获取个人任务，已完成的不再做
-    task_url = 'https://api.lightnovel.us/api/task/list'
+    task_url = 'https://api.lightnovel.fun/api/task/list'
     task_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                  '"d":{"security_key":"' + login_info.token + '"},"gz":1}'
     task_text = await util.http_post(task_url, util.build_headers(login_info), json.loads(task_param), None,
                                      '连接已断开，重试中... ', True, session)
     task_list = util.unzip(task_text)
-    sign_url = 'https://api.lightnovel.us/api/task/complete'
+    sign_url = 'https://api.lightnovel.fun/api/task/complete'
     sign_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                  '"d":{"id":%s,"security_key":"' + login_info.token + '"},"gz":1}'
     # 阅读
     log.info('轻国账号%s开始进行阅读任务...' % login_info.username)
-    read_url = 'https://api.lightnovel.us/api/history/add-history'
+    read_url = 'https://api.lightnovel.fun/api/history/add-history'
     read_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                  '"d":{"fid":2408,"class":2,"security_key":"' + login_info.token + '"},"gz":1}'
     await util.http_post(read_url, util.build_headers(login_info), json.loads(read_param), None,
@@ -57,7 +57,7 @@ async def lightnovel_task(login_info, session):
     # 收藏
     if task_list['data']['items'][1]['status'] == 0:
         log.info('轻国账号%s开始进行收藏任务...' % login_info.username)
-        collection_url = 'https://api.lightnovel.us/api/history/add-collection'
+        collection_url = 'https://api.lightnovel.fun/api/history/add-collection'
         collection_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                            '"d":{"fid":1123305,"class":1,"security_key":"' + login_info.token + '"},"gz":1}'
         await util.http_post(collection_url, util.build_headers(login_info), json.loads(collection_param), None,
@@ -94,7 +94,7 @@ async def lightnovel_task(login_info, session):
 
 # 轻国用户信息
 async def lightnovel_user_info(login_info, session):
-    url = 'https://api.lightnovel.us/api/user/info'
+    url = 'https://api.lightnovel.fun/api/user/info'
     param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
             '"d":{"uid": ' + str(login_info.uid) + ',"security_key":"' + login_info.token + '"},"gz":1}'
     text = await util.http_post(url, util.build_headers(login_info), json.loads(param), None,
@@ -108,7 +108,7 @@ async def lightnovel_user_info(login_info, session):
 async def lightnove_pay(login_info, sign_url, sign_param, session, retry_time):
     random_aid = random.randint(1000000, 1125000)
     log.info('轻国账号%s开始进行投币任务...' % login_info.username)
-    pay_url = 'https://api.lightnovel.us/api/coin/use'
+    pay_url = 'https://api.lightnovel.fun/api/coin/use'
     pay_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                 '"d":{"goods_id":2,"params":' + str(random_aid) + ',"price":1,"number":10,"total_price":10,' \
                                                                   '"security_key":"' + login_info.token + '"},"gz":1}'
@@ -127,7 +127,7 @@ async def lightnove_pay(login_info, sign_url, sign_param, session, retry_time):
 async def lightnove_like(login_info, sign_url, sign_param, session, retry_time):
     random_aid = random.randint(1000000, 1125000)
     log.info('轻国账号%s开始进行点赞任务...' % login_info.username)
-    like_url = 'https://api.lightnovel.us/api/article/like'
+    like_url = 'https://api.lightnovel.fun/api/article/like'
     like_param = '{"platform":"android","client":"app","sign":"","ver_name":"0.11.50","ver_code":190,' \
                  '"d":{"aid":' + str(random_aid) + ',"security_key":"' + login_info.token + '"},"gz":1}'
     await util.http_post(like_url, util.build_headers(login_info), json.loads(like_param), None,

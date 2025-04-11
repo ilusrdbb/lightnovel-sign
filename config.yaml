@@ -19,4 +19,4 @@ headers:
   User-Agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
 # 登录地址配置
 url_config:
-  lightnovel: 'https://www.lightnovel.us/proxy/api/user/login'
+  lightnovel: 'https://www.lightnovel.fun/proxy/api/user/login'

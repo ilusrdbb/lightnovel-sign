@@ -59,7 +59,7 @@ def build_headers(login_info):
         headers['user-agent'] = 'Dart/2.10 (dart:io)'
         headers['content-type'] = 'application/json; charset=UTF-8'
         headers['accept-encoding'] = 'gzip'
-        headers['host'] = 'api.lightnovel.us'
+        headers['host'] = 'api.lightnovel.fun'
     return headers
 
 

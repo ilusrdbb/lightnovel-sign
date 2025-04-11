@@ -50,8 +50,8 @@ def build_login_headers(login_info):
     if login_info.site == 'lightnovel':
         headers['Accept'] = 'application/json, text/plain, */*'
         headers['Accept-Language'] = 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7'
-        headers['Origin'] = 'https://www.lightnovel.us'
-        headers['Referer'] = 'https://www.lightnovel.us/cn/'
+        headers['Origin'] = 'https://www.lightnovel.fun'
+        headers['Referer'] = 'https://www.lightnovel.fun/cn/'
     return headers
 
 
