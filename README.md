@@ -1,6 +1,6 @@
 # lightnovel-sign
 
-**本项目已集成至爬虫项目https://github.com/ilusrdbb/lightnovel-pydownloader，后续不再更新**
+**本项目已集成至爬虫项目，后续不再更新https://github.com/ilusrdbb/lightnovel-pydownloader**
 
 目前暂时只支持轻国app自动做任务
 
